@@ -1,48 +1,49 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
+const mongoose = require('mongoose');
 const path = require('path');
+require('dotenv').config(); // Import dotenv to use environment variables
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+// MongoDB connection
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB connected successfully'))
+    .catch(err => console.error('MongoDB connection error:', err));
+
+const DataSchema = new mongoose.Schema({
+    userAgent: String,
+    platform: String,
+    screenWidth: Number,
+    screenHeight: Number,
+    language: String,
+    colorDepth: Number,
+    timezone: String,
+    location: {
+        latitude: Number,
+        longitude: Number
+    },
+    ipLocation: Object,
+    address: String
+});
+
+const DataModel = mongoose.model('Data', DataSchema);
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
 // Route to collect device information and location data
-app.post('/collect-info', (req, res) => {
-    const {
-        userAgent,
-        platform,
-        screenWidth,
-        screenHeight,
-        language,
-        colorDepth,
-        timezone,
-        location
-    } = req.body;
-
-    // Format the log data
-    const logData = `User Agent: ${userAgent}\n` +
-                    `Platform: ${platform}\n` +
-                    `Screen Width: ${screenWidth}\n` +
-                    `Screen Height: ${screenHeight}\n` +
-                    `Language: ${language}\n` +
-                    `Color Depth: ${colorDepth}\n` +
-                    `Timezone: ${timezone}\n` +
-                    `Location Latitude: ${location.latitude}\n` +
-                    `Location Longitude: ${location.longitude}\n` +
-                    `----------------------\n`;
-
-    // Log the device data (for now, we'll log it to a file)
-    fs.appendFile('device_info_log.txt', logData, (err) => {
-        if (err) {
-            console.error('Failed to write to log file', err);
-            return res.status(500).json({ status: 'error' });
-        }
-        console.log('Device and location data logged successfully!');
+app.post('/collect-info', async (req, res) => {
+    try {
+        const data = new DataModel(req.body);
+        await data.save();
+        console.log('Device and location data saved successfully!');
         res.json({ status: 'success' });
-    });
+    } catch (err) {
+        console.error('Failed to save data', err);
+        res.status(500).json({ status: 'error' });
+    }
 });
 
 // Serve the HTML file
