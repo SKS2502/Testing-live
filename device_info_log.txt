@@ -1,0 +1,20 @@
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0
+Platform: Win32
+Screen Width: 1536
+Screen Height: 864
+Language: en-US
+Color Depth: 24
+Timezone: Asia/Calcutta
+Location Latitude: 28.616655217498398
+Location Longitude: 77.04850594848712
+----------------------
+User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0
+Platform: Win32
+Screen Width: 1536
+Screen Height: 864
+Language: en-US
+Color Depth: 24
+Timezone: Asia/Calcutta
+Location Latitude: 28.6166291520342
+Location Longitude: 77.04852836307363
+----------------------
