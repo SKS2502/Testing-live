@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
 require('dotenv').config(); // Import dotenv to use environment variables
@@ -8,10 +7,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('MongoDB connected successfully'))
     .catch(err => console.error('MongoDB connection error:', err));
 
+// Define Data Schema
 const DataSchema = new mongoose.Schema({
     userAgent: String,
     platform: String,
@@ -28,10 +28,11 @@ const DataSchema = new mongoose.Schema({
     address: String
 });
 
+// Create Data Model
 const DataModel = mongoose.model('Data', DataSchema);
 
 // Middleware to parse JSON bodies
-app.use(bodyParser.json());
+app.use(express.json());
 
 // Route to collect device information and location data
 app.post('/collect-info', async (req, res) => {
@@ -51,6 +52,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
